@@ -25,14 +25,9 @@ class CategoryModel {
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($row) {
-            $this->id = $row['id'];
-            $this->name = $row['name'];
-            $this->description = $row['description'];
-            return true;
-        }
-        return false;
+        return $row ? $row : false;
     }
+    
 
     public function create() {
         $query = "INSERT INTO " . $this->table . " (name, description) VALUES (:name, :description)";

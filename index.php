@@ -76,7 +76,13 @@ if ($segments[0] === 'products') {
 } elseif ($segments[0] === 'categories') {
     if ($method === 'GET') {
         if (isset($segments[1]) && is_numeric($segments[1])) {
-            echo json_encode($categoryModel->read_single($segments[1]));
+            $category = $categoryModel->read_single($segments[1]);
+            if ($category) {
+                echo json_encode($category);
+            } else {
+                http_response_code(404);
+                echo json_encode(["message" => "Không tìm thấy danh mục"]);
+            }
         } else {
             $stmt = $categoryModel->read();
             $categories = [];
@@ -86,7 +92,8 @@ if ($segments[0] === 'products') {
             }
             echo json_encode($categories);
         }
-    } elseif ($method === 'POST') {
+    }
+     elseif ($method === 'POST') {
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data->name) && !empty($data->description)) {
             $categoryModel->name = $data->name;
